@@ -1,7 +1,7 @@
 import { useEffect } from "react"; 
 import { Routes, Route } from "react-router-dom";
 import Home from "./views/home/index";
-import Web3 from "web3" ;
+import Web3 from "web3/dist/web3.min";
 
 
   function App() {
