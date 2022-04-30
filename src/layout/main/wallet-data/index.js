@@ -14,18 +14,30 @@ import {
   import useTruncatedAddress from "../../../hooks/useTruncatedAddress";
   
   const WalletData = () => {
-    const {activate, account, library } = useWeb3React();
+    const { active ,activate, deactivate, account, error } = useWeb3React();
 
-    const connect = () => {
-        activate(connector)
-    }
+    const isUnsupportedChain = error instanceof UnsupportedChainIdError;
+
+    const connect = useCallback(() => {
+        activate(connector);
+        localStorage.setItem('previouslyConnected', "true");
+    }, [activate]);
+
+    const disconnect = () => {
+      deactivate();
+    };
+
+    useEffect(() => {
+      if(localStorage)
+      connect();
+    }, [connect]);
 
     return (
       <Flex alignItems={"center"}>
         {active ? (
           <Tag colorScheme="green" borderRadius="full">
             <TagLabel>
-              <Link to="/punks">{truncatedAddress}</Link>
+              <Link to="/punks">{account}</Link>
             </TagLabel>
             <Badge
               d={{
@@ -38,7 +50,8 @@ import {
             >
               ~{balance} Ξ
             </Badge>
-            <TagCloseButton onClick={disconnect} />
+            <TagCloseButton 
+            onClick= {disconnect}/>
           </Tag>
         ) : (
           <Button
@@ -48,9 +61,9 @@ import {
             leftIcon={<AddIcon />}
             onClick={connect}
             disabled={isUnsupportedChain}
-          >
-            {isUnsupportedChain ? "Red no soportada" : "Conectar wallet"}
-          </Button>
+            >
+              {isUnsupportedChain ? "red no soportada" : "Conectar wallet"}
+            </Button>
         )}
       </Flex>
     );
