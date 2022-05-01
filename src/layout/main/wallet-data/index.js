@@ -11,10 +11,11 @@ import {
   import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
   import { connector } from "../../../config/web3";
   import { useCallback, useEffect, useState } from "react";
-  import useTruncatedAddress from "../../../hooks/useTruncatedAddress";
+  //import useTruncatedAddress from "../../../hooks/useTruncatedAddress";
   
   const WalletData = () => {
-    const { active ,activate, deactivate, account, error } = useWeb3React();
+    const [balance, setBalance] = useState(0);
+    const { active ,activate, deactivate, account, error, library } = useWeb3React();
 
     const isUnsupportedChain = error instanceof UnsupportedChainIdError;
 
@@ -25,11 +26,18 @@ import {
 
     const disconnect = () => {
       deactivate();
+      localStorage.removeItem("previouslyConnected");
     };
 
+    const getBalance = useCallback( async() => {
+      const balance = await library.eth.getBalance(account);
+    }, []);
+
     useEffect(() => {
-      if(localStorage)
-      connect();
+      getBalance()
+    }, [getBalance])
+    useEffect(() => {
+      if(localStorage.getItem('previouslyConnected') === "true") connect();
     }, [connect]);
 
     return (
