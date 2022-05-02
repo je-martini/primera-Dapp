@@ -31,18 +31,19 @@ import {
 
     const getBalance = useCallback( async() => {
       const toSet = await library.eth.getBalance(account);
-      setBalance (toSet);
+      setBalance ((toSet / 1e18).toFixed(2));
     },
     //cuando al arreglo se le agrega el library.eth deja de funcionar la app
     [
-    //library.eth
-  
+    library?.eth,
+    account
     ]
     );
 
     useEffect(() => {
-      getBalance()
-    }, [getBalance])
+      if (active) getBalance()
+    }, [active,  getBalance]);
+
     useEffect(() => {
       if(localStorage.getItem('previouslyConnected') === "true") connect();
     }, [connect]);
