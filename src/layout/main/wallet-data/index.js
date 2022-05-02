@@ -30,8 +30,13 @@ import {
     };
 
     const getBalance = useCallback( async() => {
-      const balance = await library.eth.getBalance(account);
-    }, []);
+      const toSet = await library.eth.getBalance(account);
+      setBalance (toSet);
+    },
+    [
+    //library.eth
+    ]
+    );
 
     useEffect(() => {
       getBalance()
