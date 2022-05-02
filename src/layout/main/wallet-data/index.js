@@ -33,8 +33,10 @@ import {
       const toSet = await library.eth.getBalance(account);
       setBalance (toSet);
     },
+    //cuando al arreglo se le agrega el library.eth deja de funcionar la app
     [
     //library.eth
+  
     ]
     );
 
