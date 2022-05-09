@@ -8,8 +8,12 @@ const useJesuspunks = () => {
 
     const { active, library, chainId } = useWeb3React();
 
-    const jesuspunks = useMeno(
-        () => new library.eth.Contract("<<ADDRESS>>",abi),
+    const jesuspunks = useMemo(
+        () => {
+            if(active) return new library.eth.Contract(abi, address[chainId])
+        },
         [active, chainId, library?.eth?.Contract]);
+
+        return jesuspunks;
 }
 export default useJesuspunks;

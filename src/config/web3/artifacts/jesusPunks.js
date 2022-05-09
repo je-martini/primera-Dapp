@@ -1,6 +1,6 @@
 const jesuspunksArtifacts = {
     address: {
-        4: ""
+        4: "0x086f5Ee2F88bF15B9174E711AbDA869cf6A4226a"
     },
     abi: [
             {
