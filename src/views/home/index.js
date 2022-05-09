@@ -9,29 +9,15 @@ import {
   } from "@chakra-ui/react";
   import { Link } from "react-router-dom";
   import { useWeb3React } from "@web3-react/core";
-  import usePlatziPunks from "../../hooks/usePlatziPunks";
-  import { useCallback, useEffect, useState } from "react";
+  import useJesuspunks from "../../hooks/useJesuspunks";
   
-  const Home = () => {
-    const [imageSrc, setImageSrc] = useState("");
-    const { active, account } = useWeb3React();
-    const platziPunks = usePlatziPunks();
+
   
-    const getPlatziPunksData = useCallback(async () => {
-      if (platziPunks) {
-        const totalSupply = await platziPunks.methods.totalSupply().call();
-        const dnaPreview = await platziPunks.methods
-          .deterministicPseudoRandomDNA(totalSupply, account)
-          .call();
-        const image = await platziPunks.methods.imageByDNA(dnaPreview).call();
-        setImageSrc(image);
-      }
-    }, [platziPunks, account]);
-  
-    useEffect(() => {
-      getPlatziPunksData();
-    }, [getPlatziPunksData]);
-  
+const Home = () => {
+
+    const { active } = useWeb3React();
+    const jesuspunks = useJesuspunks();
+
     return (
       <Stack
         align={"center"}
@@ -88,7 +74,7 @@ import {
               colorScheme={"green"}
               bg={"green.400"}
               _hover={{ bg: "green.500" }}
-              disabled={!platziPunks}
+              disabled={!jesuspunks}
             >
               Obtén tu punk
             </Button>
@@ -107,7 +93,7 @@ import {
           position={"relative"}
           w={"full"}
         >
-          <Image src={active ? imageSrc : "https://avataaars.io/"} />
+          <Image src="https://avataaars.io/" />
           {active ? (
             <>
               <Flex mt={2}>
@@ -125,7 +111,6 @@ import {
                 </Badge>
               </Flex>
               <Button
-                onClick={getPlatziPunksData}
                 mt={4}
                 size="xs"
                 colorScheme="green"
