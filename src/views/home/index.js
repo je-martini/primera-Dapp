@@ -6,28 +6,71 @@ import {
     Button,
     Image,
     Badge,
+    useToast
   } from "@chakra-ui/react";
   import { Link } from "react-router-dom";
   import { useWeb3React } from "@web3-react/core";
   import useJesuspunks from "../../hooks/useJesuspunks";
-  import { useCallback, useEffect } from "react";
+  import { useCallback, useEffect, useState } from "react";
 
   
 const Home = () => {
 
-    const { active } = useWeb3React();
+    const [isMinting, setIsMinting] = useState(false);
+    const [imageSrc, setImageSrc] = useState("");
+    const { active, account } = useWeb3React();
     const jesuspunks = useJesuspunks();
+    const toast = useToast();
 
     const getJesuspunksData = useCallback(async() => {
       if (jesuspunks){
         const totalSupply = await jesuspunks.methods.totalSupply().call();
-        const dnaPreview = await jesuspunks.methods.deterministicPseudoRandomDNA(); 
-      }
-    }, [jesuspunks]);
+        const dnaPreview = await jesuspunks.methods.deterministicPseudoRandomDNA(
+          totalSupply,
+          account)
+          .call(); 
+          const image = await jesuspunks.methods.imageByDNA(dnaPreview).call() ;
+          setImageSrc(image);
+        }
+    }, [jesuspunks, account]);
 
     useEffect(() =>{
       getJesuspunksData();
     }, [getJesuspunksData]);
+
+    const mint = () => {
+      setIsMinting (true);
+
+      jesuspunks.methods.mint().send({
+        from: account,
+      })
+      .on("transactionHash", (txHash) => {
+        toast({
+          title: 'transaccion enviada',
+          description: txHash,
+          status: 'info'
+        })
+      })
+      .on("receipt", () => {
+        setIsMinting(false);
+        toast({
+          title: 'transaccion confirmada',
+          description: 'nunca pares de aprender',
+          status: 'success'
+        })
+      })
+      .on("error", (error) => {
+        setIsMinting(false);
+        toast({
+          title: 'transaccion fallida',
+          description: error.message,
+          status: 'error'
+        })
+      })
+
+      
+
+    };
 
     return (
       <Stack
@@ -86,6 +129,8 @@ const Home = () => {
               bg={"green.400"}
               _hover={{ bg: "green.500" }}
               disabled={!jesuspunks}
+              onClick={mint}
+              isLoading={isMinting}
             >
               Obtén tu punk
             </Button>
@@ -104,7 +149,7 @@ const Home = () => {
           position={"relative"}
           w={"full"}
         >
-          <Image src="https://avataaars.io/" />
+          <Image src={active ? imageSrc : "https://avataaars.io/"} />
           {active ? (
             <>
               <Flex mt={2}>
@@ -122,6 +167,7 @@ const Home = () => {
                 </Badge>
               </Flex>
               <Button
+                onClick={getJesuspunksData}
                 mt={4}
                 size="xs"
                 colorScheme="green"
