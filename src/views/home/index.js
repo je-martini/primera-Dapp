@@ -10,13 +10,24 @@ import {
   import { Link } from "react-router-dom";
   import { useWeb3React } from "@web3-react/core";
   import useJesuspunks from "../../hooks/useJesuspunks";
-  
+  import { useCallback, useEffect } from "react";
 
   
 const Home = () => {
 
     const { active } = useWeb3React();
     const jesuspunks = useJesuspunks();
+
+    const getJesuspunksData = useCallback(async() => {
+      if (jesuspunks){
+        const totalSupply = await jesuspunks.methods.totalSupply().call();
+        const dnaPreview = await jesuspunks.methods.deterministicPseudoRandomDNA(); 
+      }
+    }, [jesuspunks]);
+
+    useEffect(() =>{
+      getJesuspunksData();
+    }, [getJesuspunksData]);
 
     return (
       <Stack
