@@ -65,7 +65,7 @@ const getPunkData = async ({jesuspunks, tokenId}) => {
 };
 // plural
 
-const usejesuspunData = () => {
+const useJesuspunksdata  = () => {
     const [punks, setPunks] = useState([]);
     const [loading,setLoading] = useState([true]);
     const jesuspunks = useJesuspunks();
@@ -78,16 +78,33 @@ const usejesuspunData = () => {
 
             const totalSupply = await jesuspunks.methods.totalSupply().call();
             tokenIds = new Array(totalSupply).fill().map((_, index) => index); 
-            setLoading(false)
+            
+            const punksPromise = tokenIds.map((tokenId) => 
+            getPunkData({ tokenId, jesuspunks})
+            );
+
+            const punks = await Promise.all(punksPromise);
+
+            setPunks(punks);
+            setLoading(false);
         }
-    });
+    }, [jesuspunks]); 
+
 
     useEffect (() => {
         update();
     }, [update]);
+
+    return {
+        loading,
+        punks,
+        update,
+    };
 };
 
 // siguiente sera singular
-// const usejesuspunData = () => {
+// const useJesuspunksdata  = () => {
 
 //}
+
+export { useJesuspunksdata }
