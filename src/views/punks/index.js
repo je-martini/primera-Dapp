@@ -3,12 +3,12 @@ import { Grid } from '@chakra-ui/react';
 import PunkCard from '../../components/punk-card';
 import Loading from '../../components/loading';
 import RequestAccess from '../../components/request-access';
-import { useJesusPunksdata } from '../../hooks/useJesuspunksData';
+import { useJesuspunksdata } from '../../hooks/useJesusPunksData';
 
 const Punks = () => {
     const { active } = useWeb3React();
 
-    const { Punks, loading } = useJesusPunksdata();
+    const { Punks, loading } = useJesuspunksdata();
 
     if (!active) return <RequestAccess />;
     

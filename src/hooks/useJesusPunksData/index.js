@@ -77,7 +77,7 @@ const useJesuspunksdata  = () => {
             let tokenIds;
 
             const totalSupply = await jesuspunks.methods.totalSupply().call();
-            tokenIds = new Array(totalSupply).fill().map((_, index) => index); 
+            tokenIds = new Array(Number(totalSupply)).fill().map((_, index) => index); 
             
             const punksPromise = tokenIds.map((tokenId) => 
             getPunkData({ tokenId, jesuspunks})
