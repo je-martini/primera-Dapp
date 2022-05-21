@@ -103,8 +103,33 @@ const useJesuspunksdata  = () => {
 };
 
 // siguiente sera singular
-// const useJesuspunksdata  = () => {
+ const useJesuspunkdata  = (tokenId = null) => {
+    const [punk, setPunks] = useState({});
+    const [loading, setLoading] = useState(true);
+    const jesuspunks = useJesuspunks();
 
-//}
 
-export { useJesuspunksdata }
+    const update = useCallback(() =>{
+        if(jesuspunks && tokenId != null)
+        setLoading(true);
+
+        const toset =  getPunkData({ tokenId, jesuspunks});
+        setPunks(toset) ;
+
+        setLoading(false);
+    
+    
+    }, [jesuspunks, tokenId]);
+
+    useEffect(() => {
+        update()
+    }, [update])
+
+    return{
+        loading,
+        punk,
+        update
+    };
+}
+
+export { useJesuspunksdata, useJesuspunkdata }
