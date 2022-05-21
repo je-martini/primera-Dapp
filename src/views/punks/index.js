@@ -8,7 +8,7 @@ import { useJesuspunksdata } from '../../hooks/useJesusPunksData';
 const Punks = () => {
     const { active } = useWeb3React();
 
-    const { Punks, loading } = useJesuspunksdata();
+    const { punks, loading } = useJesuspunksdata();
 
     if (!active) return <RequestAccess />;
     
@@ -17,12 +17,11 @@ const Punks = () => {
         {loading ? (
                 <Loading /> 
             ) : (
-                <Grid templateColumns="repeat(auto-fill, minmax(250px, 1fr))" gap={6}>
-                {Punks.map(({ name, image, tokenId }) => (
-                    <PunkCard key={tokenId} image={image} name={name} />
-                ))}
-                </Grid>
-                
+        <Grid templateColumns="repeat(auto-fill, minmax(250px, 1fr))" gap={6}>
+          {punks.map(({ name, image, tokenId }) => (
+            <PunkCard key={tokenId} image={image} name={name} />
+          ))}
+        </Grid>
             )}
         </> 
     );
