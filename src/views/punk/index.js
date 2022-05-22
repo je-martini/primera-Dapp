@@ -19,7 +19,7 @@ import { useParams } from "react-router-dom";
 import Loading from "../../components/loading";
 
 const Punk = () => {
-  const { active } = useWeb3React();
+  const { active, account } = useWeb3React();
   const {tokenId} = useParams();
 
   const { loading, punk} = useJesuspunkdata(tokenId );
@@ -42,7 +42,10 @@ const Punk = () => {
           name={punk.name}
           image={punk.image}
         />
-        <Button colorScheme="green">transferir</Button>
+        <Button disabled={account !== punk.owner}
+        colorScheme="green">
+          {account !== punk.owner ? "no eres el dueno" : "transferir"}
+        </Button>
       </Stack>
       <Stack width="100%" spacing={5}>
         <Heading>{punk.name}</Heading>
