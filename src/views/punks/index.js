@@ -20,6 +20,7 @@ const Punks = () => {
             ) : (
         <Grid templateColumns="repeat(auto-fill, minmax(250px, 1fr))" gap={6}>
           {punks.map(({ name, image, tokenId }) => (
+            
             <Link key={tokenId} to={`/punks/${tokenId}`} >
 
               <PunkCard  image={image} name={name} />
