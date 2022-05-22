@@ -39,14 +39,14 @@ const Punk = () => {
             base: "auto",
             md: 0,
           }}
-          name={Punk.name}
-          image={Punk.image}
+          name={punk.name}
+          image={punk.image}
         />
         <Button colorScheme="green">transferir</Button>
       </Stack>
       <Stack width="100%" spacing={5}>
-        <Heading>{Punk.name}</Heading>
-        <Text fontSize="xl">{Punk.description}</Text>
+        <Heading>{punk.name}</Heading>
+        <Text fontSize="xl">{punk.description}</Text>
         <Text fontWeight={600}>
           DNA:
           <Tag ml={2} colorScheme="green">
@@ -67,7 +67,7 @@ const Punk = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {Object.entries(Punk.attributes).map(([key, value]) => (
+            {Object.entries(punk.attributes).map(([key, value]) => (
               <Tr key={key}>
                 <Td>{key}</Td>
                 <Td>
