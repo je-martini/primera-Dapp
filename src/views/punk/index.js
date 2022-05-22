@@ -10,6 +10,7 @@ import {
   Tbody,
   Button,
   Tag,
+  useToast
 } from "@chakra-ui/react";
 import { useWeb3React } from "@web3-react/core";
 import RequestAccess from "../../components/request-access";
@@ -17,12 +18,21 @@ import PunkCard from "../../components/punk-card";
 import { useJesuspunkdata } from "../../hooks/useJesusPunksData";
 import { useParams } from "react-router-dom";
 import Loading from "../../components/loading";
+import {useState} from "react";
 
 const Punk = () => {
   const { active, account } = useWeb3React();
   const {tokenId} = useParams();
 
   const { loading, punk} = useJesuspunkdata(tokenId );
+  const toast = useToast();
+  const [transfering, setTransfering] = useState(false);
+
+  const transfer = () => {
+
+    setTransfering(true);
+
+  };
 
  if (!active) return <RequestAccess />;
 
@@ -42,8 +52,12 @@ const Punk = () => {
           name={punk.name}
           image={punk.image}
         />
-        <Button disabled={account !== punk.owner}
-        colorScheme="green">
+        <Button 
+        onClick={transfer}
+        disabled={account !== punk.owner}
+        colorScheme="green"
+        isLoading={transfering}
+        >
           {account !== punk.owner ? "no eres el dueno" : "transferir"}
         </Button>
       </Stack>
