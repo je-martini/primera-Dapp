@@ -19,12 +19,14 @@ import { useJesuspunkdata } from "../../hooks/useJesusPunksData";
 import { useParams } from "react-router-dom";
 import Loading from "../../components/loading";
 import {useState} from "react";
+import useJesuspunks from "../../hooks/useJesuspunks"
 
 const Punk = () => {
-  const { active, account } = useWeb3React();
+  const { active, account, library } = useWeb3React();
   const {tokenId} = useParams();
 
-  const { loading, punk} = useJesuspunkdata(tokenId );
+  const { loading, punk, update} = useJesuspunkdata(tokenId );
+  const jesuspunks = useJesuspunks();
   const toast = useToast();
   const [transfering, setTransfering] = useState(false);
 
@@ -32,6 +34,45 @@ const Punk = () => {
 
     setTransfering(true);
 
+    const address = prompt("Ingresa la direccion");
+
+    const isAddress = library.utils.isAddress(address);
+    
+    if(!isAddress){
+      toast({
+        title: 'direccion invalida',
+        description: 'la direccion no es una direccion de etherum',
+        status: 'error',
+      });
+      setTransfering(false);
+    } else{
+      jesuspunks.methods.safeTransferFrom(
+        punk.owner,
+        address, 
+        punk.tokenId
+      ).send({
+        from: account
+      })
+      .on( 'error', () => {
+        setTransfering(false);
+      })
+      .on( 'transactionHash', (txHash) => {
+        toast({
+          title: "Transaccion enviada",
+          description: txHash,
+          status: "info",
+        });
+      })
+      .on( 'receipt', () => {
+        setTransfering(false)
+        toast({
+          title: "Transaccion confirmada",
+          description: `el punk ahora pertenece a ${address}`,
+          status: "success",
+        });
+        update();
+      });
+    }
   };
 
  if (!active) return <RequestAccess />;
