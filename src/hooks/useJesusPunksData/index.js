@@ -1,3 +1,4 @@
+import { useWeb3React } from "@web3-react/core";
 import { useCallback, useEffect, useState } from "react";
 import useJesuspunks from "../useJesuspunks";
 
@@ -65,8 +66,9 @@ const getPunkData = async ({jesuspunks, tokenId}) => {
 };
 // plural
 
-const useJesuspunksdata  = () => {
+const useJesuspunksdata = ({ owner = null } = {}) => {
     const [punks, setPunks] = useState([]);
+    const { library } = useWeb3React();
     const [loading,setLoading] = useState([true]);
     const jesuspunks = useJesuspunks();
 
@@ -76,9 +78,23 @@ const useJesuspunksdata  = () => {
 
             let tokenIds;
 
+            if( !library.utils.isAddress(owner)) {
+
             const totalSupply = await jesuspunks.methods.totalSupply().call();
-            tokenIds = new Array(Number(totalSupply)).fill().map((_, index) => index); 
+            tokenIds = new Array(Number(totalSupply))
+            .fill()
+            .map((_, index) => index); 
+            } else{
+                const balanceOf = await jesuspunks.methods.balanceOf(owner);
             
+                const tokenIdsOfOwner = new Array (Number(balanceOf)).fill().map((_, index) => 
+
+                    jesuspunks.methods.tokenOfOwnerByIndex(owner, index)
+                );
+
+                tokenIds = await Promise.all(tokenIdsOfOwner);
+            }
+
             const punksPromise = tokenIds.map((tokenId) => 
             getPunkData({ tokenId, jesuspunks})
             );
@@ -88,7 +104,7 @@ const useJesuspunksdata  = () => {
             setPunks(punks);
             setLoading(false);
         }
-    }, [jesuspunks]); 
+    }, [jesuspunks, owner, library?.utils]); 
 
 
     useEffect (() => {
