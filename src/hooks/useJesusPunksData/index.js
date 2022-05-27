@@ -85,11 +85,11 @@ const useJesuspunksdata = ({ owner = null } = {}) => {
             .fill()
             .map((_, index) => index); 
             } else{
-                const balanceOf = await jesuspunks.methods.balanceOf(owner);
+                const balanceOf = await jesuspunks.methods.balanceOf(owner).call();
             
                 const tokenIdsOfOwner = new Array (Number(balanceOf)).fill().map((_, index) => 
 
-                    jesuspunks.methods.tokenOfOwnerByIndex(owner, index)
+                    jesuspunks.methods.tokenOfOwnerByIndex(owner, index).call()
                 );
 
                 tokenIds = await Promise.all(tokenIdsOfOwner);

@@ -15,18 +15,47 @@ import Loading from '../../components/loading';
 import RequestAccess from '../../components/request-access';
 import { useJesuspunksdata } from '../../hooks/useJesusPunksData';
 import { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const Punks = () => {
-    const [address, setAddress] = useState('');
-    const { active } = useWeb3React();
+    const { search } = useLocation();
+    const [address, setAddress] = useState(new URLSearchParams(search).get("address"));
+    const [ submitted, setSubmitted] = useState(true);
+    const [ validAddress, setValidAddress] = useState(true);
+    const navigate = useNavigate();
+ 
+    const { active, library } = useWeb3React();
 
-    const { punks, loading } = useJesuspunksdata();
+    const { punks, loading } = useJesuspunksdata({
+        owner: submitted && validAddress ? address : null,
+    });
+
+
+    const handleAddressChange = ( {target: {value} } ) => {
+
+        setAddress(value);
+        setSubmitted(false);
+        setValidAddress(false);
+    } ;
+
+    const submit = (event) => {
+        event.preventDefault();
+
+        if(address){
+            const isValid = library.utils.isAddress(address);
+            setValidAddress(isValid);
+            setSubmitted(true);
+            if (isValid) navigate(`/punks?address=${address}`)
+        }   else{
+            navigate('/punks')
+        }
+     }
 
     if (!active) return <RequestAccess />;
     
     return (
         <>
-        <form>
+        <form onSubmit={submit}>
             <FormControl>
                 <InputGroup mb={3}>
                     <InputLeftElement pointerEvents='none' children={<SearchIcon color="gray.300" /> } 
@@ -34,7 +63,7 @@ const Punks = () => {
                     <Input 
                     isInvalid={false}
                     value={address ?? ''}
-                    onChange={() => {}}
+                    onChange={handleAddressChange}
                     placeholder="buscar por direccion"
                     />
                     <InputRightElement width="5.5rem">
@@ -43,6 +72,9 @@ const Punks = () => {
                         </Button>
                     </InputRightElement>
                 </InputGroup>
+                {
+                    submitted && !validAddress && <FormHelperText>direccion invalida</FormHelperText>
+                }
             </FormControl>
         </form>
         {loading ? (
