@@ -95,25 +95,25 @@ const Home = () => {
                 position: "absolute",
                 bottom: 1,
                 left: 0,
-                bg: "green.400",
+                bg: "#efb710",
                 zIndex: -1,
               }}
             >
-              Un Platzi Punk
+              Un Super Punk
             </Text>
             <br />
             <Text as={"span"} color={"green.400"}>
-              nunca para de aprender
+              Siempre a la Moda
             </Text>
           </Heading>
           <Text color={"gray.500"}>
-            Platzi Punks es una colección de Avatares randomizados cuya metadata
-            es almacenada on-chain. Poseen características únicas y sólo hay 10000
-            en existencia.
+            Estos Punks son una colección de Avatares randomizados cuya metadata
+            es almacenada on-chain. Poseen características Unicas ademas de Super Poderosas 
+            y sólo hay 10000 en existencia.
           </Text>
-          <Text color={"green.500"}>
-            Cada Platzi Punk se genera de forma secuencial basado en tu address,
-            usa el previsualizador para averiguar cuál sería tu Platzi Punk si
+          <Text color={"gray.500"}>
+            Cada Punk se genera de forma secuencial basado en tu address,
+            usa el previsualizador para averiguar cuál sería tu Punk si
             minteas en este momento
           </Text>
           <Stack
@@ -125,18 +125,18 @@ const Home = () => {
               size={"lg"}
               fontWeight={"normal"}
               px={6}
-              colorScheme={"green"}
-              bg={"green.400"}
-              _hover={{ bg: "green.500" }}
+              colorScheme={"#efb710"}
+              bg={"#efb710"}
+              _hover={{ bg: "#c79912" }}
               disabled={!jesuspunks}
               onClick={mint}
               isLoading={isMinting}
             >
-              Obtén tu punk
+              <Text color={"black"}>Obtén tu punk</Text>
             </Button>
             <Link to="/punks">
-              <Button rounded={"full"} size={"lg"} fontWeight={"normal"} px={6}>
-                Galería
+              <Button bg={"green.400"} rounded={"full"} size={"lg"} fontWeight={"normal"} px={6}>
+              <Text color={"black"}>Galería</Text>
               </Button>
             </Link>
           </Stack>
@@ -170,9 +170,10 @@ const Home = () => {
                 onClick={getJesuspunksData}
                 mt={4}
                 size="xs"
-                colorScheme="green"
+                colorScheme={"#efb710"}
+              bg={"#efb710"}
               >
-                Actualizar
+                <Text color="black">Actualizar</Text>
               </Button>
             </>
           ) : (
